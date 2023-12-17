@@ -640,18 +640,19 @@ public class MyApplication extends Application {
 						des1.setSecretkey(masterKey);
 						byte[] keyBytes;
 						
-						String path1 = "Key";
-						String path2 = "Key";
+						String userPath = "Key/" + user;
+						String path1 = userPath;
+						String path2 = userPath;
 						keyBytes = secretkey.getEncoded();
 						
 						switch (alg) {
 							case "AES":
-								path1 = "Key/AES/plain" + filename;
-								path2 = "Key/AES/" + filename;
+								path1 = userPath + "/AES/plain" + filename;
+								path2 = userPath + "/AES/" + filename;
 								break;
 							case "DES":
-								path1 = "Key/DES/plain" + filename;
-								path2 = "Key/DES/" + filename;
+								path1 = userPath + "/DES/plain" + filename;
+								path2 = userPath + "/DES/" + filename;
 								break;
 							default:
 								break;
@@ -693,18 +694,19 @@ public class MyApplication extends Application {
 					
 				} else {
 					
-					String path1 = "Key";
-					String path2 = "Key";
+					String userPath = "Key/" + user;
+					String path1 = userPath;
+					String path2 = userPath;
 					
 					switch (alg) {
 					case "AES":
-						path1 = "Key/AES/plain" + filename;
+						path1 = userPath + "/AES/plain" + filename;
 						// Encrypted file path
-						path2 = "Key/AES/" + filename;
+						path2 = userPath + "/AES/" + filename;
 						break;
 					case "DES":
-						path1 = "Key/DES/plain" + filename;
-						path2 = "Key/DES/" + filename;
+						path1 = userPath + "/DES/plain" + filename;
+						path2 = userPath + "/DES/" + filename;
 						break;
 					default:
 						break;
