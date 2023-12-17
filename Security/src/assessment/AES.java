@@ -35,7 +35,7 @@ public class AES {
     }
 
     /**
-     * Step 1. Generate an AES key using KeyGenerator
+     * Generate an AES key using KeyGenerator
      */
     public void generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -43,6 +43,9 @@ public class AES {
         this.setSecretkey(keyGen.generateKey());
     }
 
+    /** 
+     * Encrypt large text using BouncyCastle.
+     */
     public byte[] encryptBC(String strDataToEncrypt)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException,
@@ -51,27 +54,23 @@ public class AES {
     	byte[] iv = new byte[IV_LEN];
         SecureRandom random = new SecureRandom();
         random.nextBytes(iv);
-    	
         byte[] byteDataToEncrypt = strDataToEncrypt.getBytes();
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
-        
         cipher.init(Cipher.ENCRYPT_MODE, this.getSecretKey(), new IvParameterSpec(iv));
-
         byte[] cipherText = new byte[cipher.getOutputSize(byteDataToEncrypt.length) + iv.length]; 
         System.arraycopy(iv, 0, cipherText, 0, iv.length);
-
-//        byte[] messageCipher = cipher.doFinal(byteDataToEncrypt);
-        
         byte[] messageCipher = new byte[cipher.getOutputSize(byteDataToEncrypt.length)];
         int ctLength = cipher.update(byteDataToEncrypt, 0, byteDataToEncrypt.length, messageCipher, 0);
         ctLength += cipher.doFinal(messageCipher, ctLength);
-//      return cipherText;
         System.arraycopy(messageCipher, 0, cipherText,iv.length,
-            messageCipher.length);
+        messageCipher.length);
         return cipherText;
     }
 
+    /** 
+     * Decrypt large text using BouncyCastle.
+     */
     public String decryptBC(byte[] cipherText)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException,
@@ -82,26 +81,13 @@ public class AES {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
         cipher.init(Cipher.DECRYPT_MODE, this.getSecretKey(), new IvParameterSpec(iv));
-
         byte[] messageCipher = new byte[cipherText.length - iv.length];
         System.arraycopy(cipherText, iv.length, messageCipher, 0, cipherText.length - iv.length);
-        
         byte[] plainText = new byte[cipherText.length - iv.length];
         int ptLength = cipher.update(messageCipher, 0, messageCipher.length, plainText, 0);
         ptLength += cipher.doFinal(plainText, ptLength);
         return new String(plainText);
-       
 
-//        return new String(cipher.doFinal(messageCipher));
-        
-        
-        
-        
-        
-//        
-//        byte[] decryptedData = cipher.doFinal(cipherText, iv.length, cipherText.length - iv.length);
-//
-//        return new String(decryptedData);
     }
 
     /**
@@ -118,6 +104,9 @@ public class AES {
         this.secretKey = secretKey;
     }
     
+    /**
+     * @param keyText the String used to generate SecretKey
+     */
     public void setSecretkey(String keyText) {
     	try {
             // Use a KeyGenerator to generate a key
@@ -133,59 +122,6 @@ public class AES {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    
-    public SecretKey decryptKey(byte[] cipherText)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException,
-            NoSuchProviderException, ShortBufferException {
-    	
-    	byte[] iv = new byte[IV_LEN];
-        System.arraycopy(cipherText, 0, iv, 0, iv.length);
-//        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-        cipher.init(Cipher.DECRYPT_MODE, this.getSecretKey(), new IvParameterSpec(iv));
-
-        byte[] messageCipher = new byte[cipherText.length - iv.length];
-        System.arraycopy(cipherText, iv.length, messageCipher, 0, cipherText.length - iv.length);
-        
-        byte[] plainText = cipher.doFinal(messageCipher);
-       
-        return new SecretKeySpec(plainText, 0, plainText.length, "AES");
-    }
-    
-    
-    public byte[] encryptKey(SecretKey keyToEncrypt)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-            InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException,
-            NoSuchProviderException, ShortBufferException {
-    	
-    	
-
-    	byte[] iv = new byte[IV_LEN];
-        SecureRandom random = new SecureRandom();
-        random.nextBytes(iv);
-        
-        byte[] keyBytes = keyToEncrypt.getEncoded();
-    	
-        Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-        cipher.init(Cipher.ENCRYPT_MODE, this.getSecretKey(), new IvParameterSpec(iv));
-
-        byte[] cipherText = new byte[cipher.getOutputSize(keyBytes.length) + iv.length]; 
-        System.arraycopy(iv, 0, cipherText, 0, iv.length);
-
-//        byte[] messageCipher = cipher.doFinal(byteDataToEncrypt);
-        
-        byte[] messageCipher = cipher.doFinal(keyBytes); 
-//      return cipherText;
-        System.arraycopy(messageCipher, 0, cipherText,iv.length,
-            messageCipher.length);
-        return cipherText;
-        
-        
-    }
-    
-    
+    }   
     
 }

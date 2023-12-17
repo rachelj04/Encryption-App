@@ -46,7 +46,7 @@ public class DES {
     
     
     /**
-	* Step 1. Generate a DES key using KeyGenerator 
+	* Generate a DES key using KeyGenerator 
     */
     
     public void generateKey() throws NoSuchAlgorithmException 
@@ -55,6 +55,10 @@ public class DES {
         this.setSecretkey(keyGen.generateKey());        
     }
     
+    
+    /** 
+     * Encrypt large text using BouncyCastle.
+     */
     public byte[] encryptBC (String strDataToEncrypt) throws 
             NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, 
             InvalidAlgorithmParameterException, IllegalBlockSizeException, 
@@ -70,7 +74,9 @@ public class DES {
         return cipherText;
     }
    
-    
+    /** 
+     * Decrypt large text using BouncyCastle.
+     */
     public String decryptBC (byte[] strCipherText) throws 
             NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, 
             InvalidAlgorithmParameterException, IllegalBlockSizeException, 
@@ -100,7 +106,9 @@ public class DES {
         this.secretkey = secretkey;
     }
     
-    
+    /**
+     * @param keyText the String used to generate SecretKey
+     */
     public void setSecretkey(String keyText) {
     	try {
             // Use a KeyGenerator to generate a key
@@ -113,7 +121,11 @@ public class DES {
         }
     }
     
-    
+    /**
+     * @param cipherText the encrypted key bytes
+     * @param alg the encrypted key's algorithm
+     * @return decrypted SecretKey 
+     */
     public SecretKey decryptKey(byte[] cipherText, String alg)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException,
@@ -124,6 +136,10 @@ public class DES {
         return new SecretKeySpec(plainText, 0, plainText.length, alg);
     }
     
+    /**
+     * @param key to encrypt
+     * @return encrypted SecretKey 
+     */
     
     public byte[] encryptKey(SecretKey keyToEncrypt)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
@@ -149,7 +165,7 @@ public class DES {
 	}
 
 
-public String decrypt (byte[] strCipherText) throws 
+    public String decrypt (byte[] strCipherText) throws 
 		    NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, 
 		    InvalidAlgorithmParameterException, IllegalBlockSizeException, 
 		    BadPaddingException, ShortBufferException, NoSuchProviderException{        
@@ -198,7 +214,13 @@ public String decrypt (byte[] strCipherText) throws
     	fos.flush();
     	fos.close();
     }     
-            
+    
+    
+    /**
+     * @param filename the key file
+     * @param alg key's algorithm
+     * @return SecretKey
+     */
     public SecretKey getKeyFromFile(String filename, String alg) throws Exception {
     	byte[] keyBytes = Files.readAllBytes(new File(filename).toPath());
     	

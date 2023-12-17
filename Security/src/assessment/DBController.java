@@ -21,7 +21,6 @@ public class DBController {
     private PasswordAuthentication pa = new PasswordAuthentication();
    
     
-
     public DBController() {
 //            Register JDBC driver
             try {
@@ -30,26 +29,23 @@ public class DBController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
     }
 
+    
+	/**
+	 * Authenticate with a username and a password.
+	 * @return true if the username and password match
+	 */
     public boolean authenticate(String username, String password) {
     	try {
 //          Register JDBC driver
           Class.forName("com.mysql.cj.jdbc.Driver");
           // Open a connection
-
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-          // Execute a query
-//          System.out.println("Creating statement...");
-         
-          
-//          String sql = "SELECT * FROM users where user_name = \"" + username +"\";";
-          
+          // Execute a query         
           String query = "SELECT * FROM users where user_name = ?;";
           PreparedStatement statement = connection.prepareStatement(query);
-          statement.setString(1, username);
-          
+          statement.setString(1, username);   
 	      ResultSet resultSet = statement.executeQuery();
 	        
 	      if (!resultSet.next()) {
@@ -61,38 +57,31 @@ public class DBController {
           } else {
         	/// Close external resources
         	  String hashed = resultSet.getString("user_password");
-        	  
               resultSet.close();
               statement.close();
-              connection.close();
-    	      
+              connection.close(); 
     	      return pa.authenticate(password.toCharArray(), hashed);
           }
-	    
       } catch (ClassNotFoundException | SQLException e) {
           e.printStackTrace();
           return false;
       }
     }
     
+    
+	/**
+	 * Check if the username exists in datbase
+	 * @return true if the username exists
+	 */
     public boolean existUsername(String username) {
-    	try {
-//          
+    	try {        
           // Open a connection
-
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-          // Execute a query
-//          System.out.println("Creating statement...");
-          
-          
+          // Execute a query        
           String query = "SELECT * FROM users where user_name = ?;";
           PreparedStatement statement = connection.prepareStatement(query);
           statement.setString(1, username);
-          
 	      ResultSet resultSet = statement.executeQuery();
-	        
-	     
-	        
 	      if (resultSet.next()) {
 	    	/// Close external resources
 	          resultSet.close();
@@ -106,22 +95,22 @@ public class DBController {
 	          connection.close();
         	  return false;
           }
-	    
       } catch (SQLException e) {
           e.printStackTrace();
           return false;
       }
     }
     
+    
+	/**
+	 * Save the user into database with a username and a password.
+	 * @return true if successfully saved the user
+	 */
     public boolean register(String username, String password) {
-    	try {
-//        
+    	try {     
           // Open a connection
-
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-          // Execute a query
-//          System.out.println("Creating statement...");
-         
+          // Execute a query        
           String hashed = pa.hash(password.toCharArray());
           String query = "INSERT INTO users(user_name, user_password) VALUES(?, ?)";
           PreparedStatement statement = connection.prepareStatement(query);
@@ -137,27 +126,21 @@ public class DBController {
       }
     }
     
+    
+	/**
+	 * Load the key bytes from database with a username and a keyname.
+	 * @return true if successfully load the key bytes
+	 */
     public byte[] loadKey(String username, String keyname) {
-    	try {
-//        
+    	try {      
           // Open a connection
-
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
           // Execute a query
-//          System.out.println("Creating statement...");
-         
-          
-//          String sql = "SELECT DECRYPTBYPASSPHRASE('" + passphrase + "', enc_key) FROM saved_keys where user_name = \"" 
-//        		  		+ username + "\" AND key_name = \"" + keyname + "\";";
-          
-          
-          
           String query = "SELECT enc_key FROM saved_keys where user_name = ?"
           		+ " AND key_name = ?;";
           PreparedStatement statement = connection.prepareStatement(query);
           statement.setString(1, username);
           statement.setString(2, keyname);
-          
 	      ResultSet resultSet = statement.executeQuery();
 	        
 	      if (resultSet.next()) {
@@ -173,41 +156,34 @@ public class DBController {
 	          statement.close();
 	          connection.close();
         	  return null;
-          }
-	      
+          } 
       } catch (SQLException e) {
           e.printStackTrace();
           return null;
       }
     }
     
+    
+	/**
+	 * Save the key bytes to database with username, algorithm, keyname and key bytes
+	 * @return true if successfully save the key bytes
+	 */
     public boolean saveKey(String username, String alg, String keyname, byte[] key) {
-    	try {
-//        
+    	try {     
           // Open a connection
-
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
           // Execute a query
-//          System.out.println("Creating statement...");
-//          Statement statement = connection.createStatement();
-         
-          
-          		
           String query = "INSERT INTO saved_keys(user_name, alg, key_name, enc_key) VALUES(?, ?, ?, ?);";
           try (PreparedStatement statement = connection.prepareStatement(query)) {
               statement.setString(1, username);
               statement.setString(2, alg);
               statement.setString(3, keyname);
               statement.setBytes(4, key);
-
               statement.executeUpdate();
               statement.close();
           }
-
           connection.close();
           return true;
-         
-	      
       } catch (SQLException e) {
           e.printStackTrace();
           return false;
@@ -215,6 +191,10 @@ public class DBController {
     }
     
     
+	/**
+	 * Check if the key is used with the user in database with a username and a keyname.
+	 * @return true if that user already has that keyname in database
+	 */
     public boolean existKey(String username, String keyname) {
     	try {
 //        
@@ -222,13 +202,11 @@ public class DBController {
 
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
           // Execute a query
-//          System.out.println("Creating statement...");
-          Statement statement = connection.createStatement();
-          String sql = "SELECT * FROM saved_keys where user_name = \"" + username + 
-        		  "\" AND key_name = \"" + keyname + "\";";
-	        
-	      ResultSet resultSet = statement.executeQuery(sql);
-	        
+          String query = "SELECT * FROM saved_keys where user_name = ? AND key_name = ?;";
+          PreparedStatement statement = connection.prepareStatement(query);
+          statement.setString(1, username);
+          statement.setString(2, keyname);
+  	      ResultSet resultSet = statement.executeQuery();
 	      if (resultSet.next()) {
 	    	/// Close external resources
 	          resultSet.close();
@@ -242,26 +220,27 @@ public class DBController {
 	          connection.close();
         	  return false;
           }
-
       } catch (SQLException e) {
           e.printStackTrace();
           return false;
       }
     }
     
+    
+	/**
+	 * Return the algorithm from database with a username and a keyname.
+	 * @return algorithm 
+	 */
     public String getAlg(String username, String keyname) {
     	try {
-//        
           // Open a connection
-
           Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
           // Execute a query
-//          System.out.println("Creating statement...");
-          Statement statement = connection.createStatement();
-          String sql = "SELECT * FROM saved_keys where user_name = \"" + username + 
-        		  "\" AND key_name = \"" + keyname + "\";";
-	        
-	      ResultSet resultSet = statement.executeQuery(sql);
+          String query = "SELECT * FROM saved_keys where user_name = ? AND key_name = ?;";
+          PreparedStatement statement = connection.prepareStatement(query);
+          statement.setString(1, username);
+          statement.setString(2, keyname);
+  	      ResultSet resultSet = statement.executeQuery();
 	        
 	      if (resultSet.next()) {
 	    	/// Close external resources
@@ -278,7 +257,6 @@ public class DBController {
 	          connection.close();
         	 return null;
           }
-
       } catch (SQLException e) {
           e.printStackTrace();
           return null;
@@ -286,32 +264,29 @@ public class DBController {
     }
     
     
-    
+	/**
+	 * Save the settings to database with username, menucolor and background color.
+	 * @return true if successfully save the settings
+	 */
     public boolean saveSettings(String username, String menuColor, String backgroundColor) {
     	try {
-//          
             // Open a connection
-
             Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
             // Execute a query
-
             String query1 = "SELECT * FROM settings where user_name = ?";
             PreparedStatement statement1 = connection.prepareStatement(query1);
             statement1.setString(1, username);
-             
     	    ResultSet resultSet1 = statement1.executeQuery();
     	      
     	    // If no existing settings 
     	    if (!resultSet1.next()) {
     	    	String query2 = "INSERT INTO settings(user_name, menu_color, background_color) VALUES(?, ?, ?);";
     	        PreparedStatement statement2 = connection.prepareStatement(query2);
-
     	        statement2.setString(1, username);
     	        statement2.setString(2, menuColor);
     	        statement2.setString(3, backgroundColor);
     	        statement2.executeUpdate();
     	        // Close external resources
-    	          
     	        statement2.close();
     	        resultSet1.close();
     	        statement1.close();
@@ -321,7 +296,6 @@ public class DBController {
     	    } else {
     	    	String query2 = "UPDATE settings SET menu_color = ?, background_color = ? WHERE user_name = ?;";
     	    	PreparedStatement statement2 = connection.prepareStatement(query2);
-	
     	    	statement2.setString(3, username);
     	    	statement2.setString(1, menuColor);
     	    	statement2.setString(2, backgroundColor);
@@ -340,25 +314,23 @@ public class DBController {
     }
     
     
+	/**
+	 * Load the settings from database with username.
+	 * @return a Setting object 
+	 */
     public Settings loadSettings(String username) {
     	try {
-//          
             // Open a connection
-
             Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
             // Execute a query
-
             String query = "SELECT * FROM settings where user_name = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
-             
     	    ResultSet resultSet = statement.executeQuery();
     	      
     	    // If no existing settings 
     	    if (!resultSet.next()) {
-    	    	
     	        // Close external resources
-    	      
     	        resultSet.close();
     	        statement.close();
     	        connection.close();
@@ -387,8 +359,4 @@ public class DBController {
             return new Settings(null, null);
         }
     }
-    
-    
-    
-    
 }

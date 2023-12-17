@@ -118,15 +118,4 @@ public class PasswordAuthentication {
 	    }
 	  }
 	
-//	  public static void main(String[] args){
-//	        // TODO code application logic here
-//	         
-//	            String msg1 = "Welcome everybody.";        
-//	            String msg2 = "Welcome everybody.";
-//	            PasswordAuthentication pa = new PasswordAuthentication();
-//	            String p1 = pa.hash(msg1.toCharArray());
-//	            System.out.println(p1);
-//	            System.out.println(pa.authenticate(msg2.toCharArray(), p1));
-//	        
-//	 }
 }

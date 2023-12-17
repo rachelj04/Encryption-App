@@ -53,17 +53,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MyApplication extends Application {
-
-   
     private BorderPane root;
     private SecretKey secretkey;
     private String user;
     private DBController db = new DBController();
     private HBox topPane = new HBox();
-//    private String masterKey = "ABCDEFGHIJKLMNOP";
     private String masterKey = "ABCDEFGH";
-  
-    
     ColorPicker cp1 = new ColorPicker();
     ColorPicker cp2 = new ColorPicker();
     
@@ -158,8 +153,6 @@ public class MyApplication extends Application {
 		links.setAlignment(Pos.CENTER_LEFT);
 
 		// Create buttons
-		
-		
 		Button btnConven = createStyledButton("Conventional");
 		Button btnModern = createStyledButton("Modern");
 		Button btnSettings = createStyledButton("Settings");
@@ -177,7 +170,6 @@ public class MyApplication extends Application {
 
 		return topPane;
 	}
-
 
 
 	/**
@@ -206,8 +198,6 @@ public class MyApplication extends Application {
 	}
 
 
-
-
 	/**
 	 * Create the page content for the conventional algorithm page
 	 *
@@ -224,50 +214,34 @@ public class MyApplication extends Application {
 
 		// Add the header text to the top of the page content
 		pageContent.getChildren().add(headerText);
-
-		
 		GridPane conventionalPane = new GridPane();
-
 		Text errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 15));
-
-	
 		Text keyLabel = new Text("Key (positive integer)");
 		TextField keyField = new TextField();
-
 		keyField.setMaxWidth(50);
-		
 		Text inputLabel = new Text("Input (ASCII)");
 		TextField inputField = new TextField();
-
 		inputField.setPrefWidth(600);
-
-		
 		Button encryptBtn = new Button();
 		encryptBtn.setPrefSize(150, 30);
 		encryptBtn.setText("Encrypt");
-		
 		Button decryptBtn = new Button();
 		decryptBtn.setPrefSize(150, 30);
 		decryptBtn.setText("Decrypt");
-		
-		
 		// Create a Label
 	    Label outputLabel = new Label("Output");
-	    
 	    TextArea outputText = new TextArea("");
 	    // wrap the label
-	    
 	    outputText.setPrefWidth(600);
 
-
+	    // Encrypt user input
 		encryptBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 			
 				
 				String key = keyField.getText().trim();
-
 				errorMessage.setText("");
 				if (key.isEmpty()) {
 //                	quantityField.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
@@ -294,18 +268,17 @@ public class MyApplication extends Application {
 						errorMessage.setFill(Color.RED);
 						errorMessage.setText("Key must be an integer");
 					}
-
 				}
 			}
 		});
 		
+		// Decrypt user input
 		decryptBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 			
 				
 				String key = keyField.getText().trim();
-
 				errorMessage.setText("");
 				if (key.isEmpty()) {
 //                	quantityField.setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
@@ -331,7 +304,6 @@ public class MyApplication extends Application {
 						errorMessage.setFill(Color.RED);
 						errorMessage.setText("Key must be an integer");
 					}
-
 				}
 			}
 		});
@@ -341,7 +313,6 @@ public class MyApplication extends Application {
 		conventionalPane.add(errorMessage, 0, 0, 3, 1);
 		conventionalPane.add(keyLabel, 0, 1);
 		conventionalPane.add(keyField, 1, 1);
-		
 		conventionalPane.add(inputLabel, 0, 2);
 		conventionalPane.add(inputField, 1, 2, 3, 1);
 		conventionalPane.add(encryptBtn, 1, 3);
@@ -369,13 +340,9 @@ public class MyApplication extends Application {
 
 		// Add the header text to the top of the page content
 		pageContent.getChildren().add(headerText);
-
-		
 		GridPane modernPane = new GridPane();
-
 		Text errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 15));
-
 		Text algLabel = new Text("Algorithm");
 		String options[] = { "DES", "AES"};
 		ObservableList<String> items1 = FXCollections.observableArrayList(options);
@@ -390,13 +357,9 @@ public class MyApplication extends Application {
 			}
 		});
 
-
 		Text keyLabel = new Text("Key name");
-		
 		TextField keyField = new TextField();
-
 		keyField.setPrefWidth(150);
-		
 		Button loadKeyBtn = new Button();
 		loadKeyBtn.setPrefSize(150, 30);
 		loadKeyBtn.setText("Load");
@@ -409,11 +372,8 @@ public class MyApplication extends Application {
 		saveKeyBtn.setPrefSize(150, 30);
 		saveKeyBtn.setText("Save");
 		
-		
 		Text fileLabel = new Text("File name (encrypted file)");
-		
 		TextField fileField = new TextField();
-
 		keyField.setPrefWidth(150);
 		
 		Button loadFileBtn = new Button();
@@ -424,18 +384,10 @@ public class MyApplication extends Application {
 		saveFileBtn.setPrefSize(150, 30);
 		saveFileBtn.setText("Save key file");
 
-		
-		
-		
-		
-		
-
 		Text inputLabel = new Text("Input");
 		TextField inputField = new TextField();
-
 		inputField.setPrefWidth(600);
 
-		
 		Button encryptBtn = new Button();
 		encryptBtn.setPrefSize(150, 30);
 		encryptBtn.setText("Encrypt");
@@ -444,17 +396,12 @@ public class MyApplication extends Application {
 		decryptBtn.setPrefSize(150, 30);
 		decryptBtn.setText("Decrypt");
 		
-		
 		// Create a Label
 	    Label outputLabel = new Label("Output");
-	    
-	    TextArea outputText = new TextArea("");
-	    // wrap the label
-	    
+	    TextArea outputText = new TextArea("");	    
 	    outputText.setPrefWidth(600);
 	    
-	    
-	    
+	    // Load key from database
 	    loadKeyBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -471,17 +418,13 @@ public class MyApplication extends Application {
 					String alg = db.getAlg(user, keyname);
 					
 					if (key != null) {
-//						AES aes1;
 						DES des1;
 						try {
-//							aes1 = new AES();
-//							aes1.setSecretkey(masterKey);
 							des1 = new DES();
 							des1.setSecretkey(masterKey);
 							SecretKey dec_key;
 							try {
 								algField.getSelectionModel().clearSelection();
-//								dec_key = aes1.decryptKey(key);
 								dec_key = des1.decryptKey(key, alg);
 								errorMessage.setFill(Color.GREEN);
 								errorMessage.setText("Key has been loaded");
@@ -508,6 +451,7 @@ public class MyApplication extends Application {
 			}
 		});
 	    
+	    // Generate a new key
 	    genKeyBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -515,23 +459,16 @@ public class MyApplication extends Application {
 				if (alg == null) {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("Must select an algorithm");
-					
 				} else {
-					
 					switch (alg) {
-					
 					case "DES":
 						DES des1;
 						try {
 							des1 = new DES();
-							
 							KeyGenerator keyGen = KeyGenerator.getInstance("DES");
 					        secretkey = keyGen.generateKey(); 
-					        
-					        
 					        errorMessage.setFill(Color.GREEN);
 							errorMessage.setText("Key has been generated");
-							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -542,12 +479,10 @@ public class MyApplication extends Application {
 						AES aes1;
 						try {
 							aes1 = new AES();
-							
 							KeyGenerator keyGen = KeyGenerator.getInstance("AES");
 					        secretkey = keyGen.generateKey(); 
 					        errorMessage.setFill(Color.GREEN);
 							errorMessage.setText("Key has been generated");
-							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -557,11 +492,10 @@ public class MyApplication extends Application {
 						return;
 					}
 				}
-						
 			}
 		});
 	    
-	    
+	    // Save key to database
 	    saveKeyBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -613,8 +547,7 @@ public class MyApplication extends Application {
 			}
 		});
 	    
-	    
-	    
+	    // Save key to an encrypted local file
 	    saveFileBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -630,21 +563,16 @@ public class MyApplication extends Application {
 				} else if (filename.isEmpty()) {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("File name cannot be empty");
-				
-				} else {
-										
+				} else {					
 					DES des1;
 					try {
-
 						des1 = new DES();
 						des1.setSecretkey(masterKey);
 						byte[] keyBytes;
-						
 						String userPath = "Key/" + user;
 						String path1 = userPath;
 						String path2 = userPath;
 						keyBytes = secretkey.getEncoded();
-						
 						switch (alg) {
 							case "AES":
 								path1 = userPath + "/AES/plain" + filename;
@@ -659,9 +587,7 @@ public class MyApplication extends Application {
 						}
 							// Write the key to file
 							des1.writeKeyToFile(path1, keyBytes);
-							
 							// Encrypt file
-							
 								File f1 = new File(path1);
 								des1.encryptFile(des1.getFileInBytes(f1), 
 										new File(path2),des1.getSecretkey());
@@ -678,6 +604,7 @@ public class MyApplication extends Application {
 			}
 		});
 	    
+	    // Load key from encrypted local key file
 	    loadFileBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -690,14 +617,10 @@ public class MyApplication extends Application {
 				} else if (filename.isEmpty()) {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("File name cannot be empty");
-					
-					
 				} else {
-					
 					String userPath = "Key/" + user;
 					String path1 = userPath;
 					String path2 = userPath;
-					
 					switch (alg) {
 					case "AES":
 						path1 = userPath + "/AES/plain" + filename;
@@ -716,7 +639,6 @@ public class MyApplication extends Application {
 						errorMessage.setFill(Color.RED);
 						errorMessage.setText("No such key file");
 					} else {
-						
 						DES des1;
 						try {
 							des1 = new DES();
@@ -729,7 +651,6 @@ public class MyApplication extends Application {
 							f1.delete();
 							errorMessage.setFill(Color.GREEN);
 							errorMessage.setText("Key has been loaded from file");
-							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -740,8 +661,8 @@ public class MyApplication extends Application {
 				}
 			}
 		});
-	    
 
+	    // Encrypt user input
 		encryptBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -749,8 +670,6 @@ public class MyApplication extends Application {
 				if (alg == null) {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("Must select an algorithm");
-					
-					
 				} else if (secretkey == null) {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("Must have a key");
@@ -758,9 +677,7 @@ public class MyApplication extends Application {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("Input cannot be empty");
 				} else {
-					
 					switch (alg) {
-					
 					case "DES":
 						DES des1;
 						try {
@@ -794,10 +711,10 @@ public class MyApplication extends Application {
 						return;
 					}
 				}
-						
 			}
 		});
 		
+		// Decrypt user input
 		decryptBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -807,15 +724,13 @@ public class MyApplication extends Application {
 					errorMessage.setText("Must select an algorithm");
 				} else if (secretkey == null) {
 					errorMessage.setFill(Color.RED);
-					errorMessage.setText("Must have a key");
-					
+					errorMessage.setText("Must have a key");	
 				} else if (inputField.getText().isEmpty()) {
 					errorMessage.setFill(Color.RED);
 					errorMessage.setText("Input cannot be empty");
 				} else {
 					errorMessage.setText("");
 					switch (alg) {
-					
 					case "DES":
 						DES des1;
 						try {
@@ -823,8 +738,6 @@ public class MyApplication extends Application {
 							des1.setSecretkey(secretkey);
 							String input = inputField.getText();
 							byte[] byteDataToDecrypt = Base64.getDecoder().decode(input);
-							
-				            
 				            String decText = des1.decryptBC(byteDataToDecrypt);
 				            outputText.setText(decText);
 						} catch (Exception e) {
@@ -848,7 +761,6 @@ public class MyApplication extends Application {
 								String decText = aes1.decryptBC(byteDataToDecrypt);
 					            outputText.setText(decText);
 							}
-				            
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -871,14 +783,10 @@ public class MyApplication extends Application {
 		modernPane.add(loadKeyBtn, 2, 2);
 		modernPane.add(genKeyBtn, 3, 2);
 		modernPane.add(saveKeyBtn, 4, 2);
-		
 		modernPane.add(fileLabel, 1, 3);
 		modernPane.add(fileField, 2, 3);
-		
 		modernPane.add(loadFileBtn, 3, 3);
 		modernPane.add(saveFileBtn, 4, 3);
-		
-		
 		modernPane.add(inputLabel, 0, 4);
 		modernPane.add(inputField, 1, 4, 4, 1);
 		modernPane.add(encryptBtn, 1, 5);
@@ -887,7 +795,6 @@ public class MyApplication extends Application {
 		modernPane.add(outputText, 1, 6, 4, 1);
 		modernPane.setAlignment(Pos.CENTER);
 		pageContent.getChildren().add(modernPane);
-
 		return pageContent;
 	}
 
@@ -898,10 +805,6 @@ public class MyApplication extends Application {
 	 * @return Node containing the page content for the user page
 	 */
 	private Node userContent() {
-		
-		if (user == null) {
-			
-		}
 		// Set the overall padding and spacing for the page content
 		VBox pageContent = new VBox(20); // Use spacing to separate elements vertically
 		pageContent.setPadding(new Insets(20)); // Set padding around the entire content
@@ -939,7 +842,6 @@ public class MyApplication extends Application {
 		Text usernameLabel1 = new Text("User name");
 		TextField inputField1 = new TextField();
 		inputField1.setPrefWidth(200);
-
 		
 		Text passwordLabel1 = new Text("Password");
 		TextField inputField2 = new TextField();
@@ -985,8 +887,7 @@ public class MyApplication extends Application {
 		registerBtn.setPrefSize(100, 30);
 		registerBtn.setText("Register");
 		
-		
-		
+		// User log in
 		loginBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -1012,7 +913,7 @@ public class MyApplication extends Application {
 			}
 		});
 		
-		
+		// Register new user
 		registerBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -1054,10 +955,6 @@ public class MyApplication extends Application {
 				}
 			}
 		});
-		
-		
-		
-		
 		vbox1.getChildren().addAll(loginLabel, loginPane, loginBtn);
 		vbox2.getChildren().addAll(registerLabel, registerPane, registerBtn);
 		userPane.getChildren().addAll(vbox1, l, vbox2);
@@ -1066,7 +963,7 @@ public class MyApplication extends Application {
 	}
 
 	/**
-	 * Create the page content for the user log in page
+	 * Create the page content for the user page when user is logged in
 	 *
 	 * @return Node containing the page content for the user page
 	 */
@@ -1082,8 +979,6 @@ public class MyApplication extends Application {
 		// Add the header text to the top of the page content
 		pageContent.getChildren().add(headerText);
 
-		
-		
 		VBox vbox1 = new VBox(20); // Use spacing to separate elements vertically
 		vbox1.setPadding(new Insets(20));
 		vbox1.setAlignment(Pos.TOP_CENTER);
@@ -1099,6 +994,7 @@ public class MyApplication extends Application {
 		logoutBtn.setPrefSize(100, 30);
 		logoutBtn.setText("Log out");
 		
+		// User log out 
 		logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -1121,19 +1017,12 @@ public class MyApplication extends Application {
 		// Set the overall padding and spacing for the page content
 		VBox pageContent = new VBox(20); // Use spacing to separate elements vertically
 		pageContent.setPadding(new Insets(20)); // Set padding around the entire content
-
-		
-
-		
-		
 		VBox vbox1 = new VBox(20); // Use spacing to separate elements vertically
 		vbox1.setPadding(new Insets(20));
 		vbox1.setAlignment(Pos.TOP_CENTER);
-
 		Text errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 15));
 		pageContent.getChildren().add(errorMessage);
-		
 		Text loginLabel = new Text("Log in / register required");
 		loginLabel.setStyle("-fx-font-size: 12pt;"); 
 		
@@ -1141,6 +1030,7 @@ public class MyApplication extends Application {
 		toLoginBtn.setPrefSize(150, 30);
 		toLoginBtn.setText("Log in / Register");
 		
+		// Directs to user page
 		toLoginBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -1164,9 +1054,6 @@ public class MyApplication extends Application {
 		// Set the overall padding and spacing for the page content
 		VBox pageContent = new VBox(20); // Use spacing to separate elements vertically
 		pageContent.setPadding(new Insets(20)); // Set padding around the entire content
-
-		
-
 		// Create the header text
 		Text headerText = new Text("Settings");
 		headerText.setStyle("-fx-font-size: 24pt;"); // Set the header text size
@@ -1174,14 +1061,13 @@ public class MyApplication extends Application {
 		// Add the header text to the top of the page content
 		pageContent.getChildren().add(headerText);		
 		
-		GridPane settingPane = new GridPane(); // Use spacing to separate elements vertically
+		GridPane settingPane = new GridPane();
 		
 		Text menuLabel = new Text("Menu color");
 		Text backgroundLabel = new Text("Background color");
 
 		Text errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 15));
-		
 		
 		// Changes background color
 				cp1.setOnAction(new EventHandler<ActionEvent>() {
@@ -1194,7 +1080,6 @@ public class MyApplication extends Application {
 					}
 					
 				});
-		
 		
 		// Changes background color
 				cp2.setOnAction(new EventHandler<ActionEvent>() {
@@ -1212,6 +1097,7 @@ public class MyApplication extends Application {
 		saveBtn.setPrefSize(100, 30);
 		saveBtn.setText("Save");
 		
+		// Save user settings to database
 		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -1226,7 +1112,6 @@ public class MyApplication extends Application {
 						errorMessage.setText("Failed to save settings");
 					}
 				}
-				
 			}
 		});
 		
@@ -1274,6 +1159,9 @@ public class MyApplication extends Application {
 	}
 
 
+	/**
+	 * Load and apply user settings from database
+	 */
 	private void loadSettings(String username) {
 		Settings settings = db.loadSettings(username);
 		String menuColor = settings.getMenuColor();
@@ -1292,12 +1180,9 @@ public class MyApplication extends Application {
 			root.setBackground(new Background(new BackgroundFill(color2, 
 					CornerRadii.EMPTY, Insets.EMPTY)));
 		}
-		
-		
 	}
 	
 	
-
 	public static void main(String[] args) {
 		launch();
 	}
