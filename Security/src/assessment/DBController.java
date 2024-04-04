@@ -14,10 +14,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DBController {
-    static final String JDBC_URL = "jdbc:mysql://securityassessment.coip0kp9f3qh.ap-southeast-2.rds.amazonaws.com"
-    		+ ":3306/security";
+    static final String JDBC_URL = "";
     static final String USERNAME = "admin";
-    static final String PASSWORD = "masterpass"; // null password
+    static final String PASSWORD = ""; // null password
     private PasswordAuthentication pa = new PasswordAuthentication();
    
     
