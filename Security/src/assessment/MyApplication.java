@@ -33,6 +33,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -144,8 +145,7 @@ public class MyApplication extends Application {
 	private HBox createNavBar() {
 		
 		topPane.setPadding(new Insets(15));
-		topPane.setStyle("-fx-background-color: #9C6860;");
-		cp1.setValue(Color.web("#9C6860"));
+		setDefaultColor();
 
 		topPane.setSpacing(10); // Add spacing for visual separation
 
@@ -171,6 +171,16 @@ public class MyApplication extends Application {
 		return topPane;
 	}
 
+	
+	private void setDefaultColor() {
+		
+		cp1.setValue(Color.web("#9C6860"));
+		topPane.setBackground(new Background(new BackgroundFill(Color.web("#9C6860"), 
+				CornerRadii.EMPTY, Insets.EMPTY)));
+		cp2.setValue(Color.web("#FFFFFF"));
+		root.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), 
+				CornerRadii.EMPTY, Insets.EMPTY)));
+	}
 
 	/**
 	 * Create a button for the navigation bar
@@ -844,7 +854,7 @@ public class MyApplication extends Application {
 		inputField1.setPrefWidth(200);
 		
 		Text passwordLabel1 = new Text("Password");
-		TextField inputField2 = new TextField();
+		PasswordField inputField2 = new PasswordField();
 		inputField2.setPrefWidth(200);
 		
 		loginPane.add(usernameLabel1, 0, 0);
@@ -867,11 +877,11 @@ public class MyApplication extends Application {
 		inputField3.setPrefWidth(200);
 		
 		Text passwordLabel2 = new Text("Password");
-		TextField inputField4 = new TextField();
+		PasswordField inputField4 = new PasswordField();
 		inputField4.setPrefWidth(200);
 		
 		Text passwordLabel3 = new Text("Confirm Password");
-		TextField inputField5 = new TextField();
+		PasswordField inputField5 = new PasswordField();
 		inputField5.setPrefWidth(200);
 		
 		registerPane.add(usernameLabel2, 0, 0);
@@ -999,6 +1009,7 @@ public class MyApplication extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				user = null;
+				setDefaultColor();
 				switchPage("User");
 			}
 		});
